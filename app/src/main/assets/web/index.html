@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+<title>Xero Lite Craft Launcher 1.0</title>
+<!-- 启动遮罩样式：必须放第一个，且只含遮罩必需规则（<1KB），保证双击后立刻有画面 -->
+<link rel="stylesheet" href="boot.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== SVG 图标库（Lucide 风格线性图标） ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.5"/><path d="M10 21v-5.5h4V21"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m6.5 10.5 5.5 5.5 5.5-5.5"/><path d="M4 20.5h16"/></symbol>
+    <symbol id="i-import" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 9.5v5"/><path d="m9.5 12.5 2.5 2.5 2.5-2.5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6a.8.8 0 0 0 1.22.68l10.8-6.8a.8.8 0 0 0 0-1.36L9.22 4.52A.8.8 0 0 0 8 5.2z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14.5 14.5 0 0 1 0 18 14.5 14.5 0 0 1 0-18z"/></symbol>
+    <symbol id="i-drive" viewBox="0 0 24 24"><path d="M21.5 13h-19"/><path d="M5.5 5.5h13L22 13v5a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18v-5z"/><path d="M6 16h.01M9.5 16h.01"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 2.5V7M14 2.5V7M10 17v4.5M14 17v4.5M2.5 10H7M2.5 14H7M17 10h4.5M17 14h4.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5L19.5 6.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5M12 17.5h.01"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M21 3.5v5h-5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10.5" rx="2.2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><path d="M12 15v2.2"/></symbol>
+    <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 5.9"/><path d="M3.5 12A8.5 8.5 0 0 1 18.1 6.1"/><path d="m17.5 2.5.6 3.6-3.6.6"/><path d="m6.5 21.5-.6-3.6 3.6-.6"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m12 2.5 8 4.5v10.5l-8 4.5-8-4.5V7z"/><path d="m4 7 8 4.5L20 7"/><path d="M12 11.5V22"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M19 13.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5.5"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5.5 12h13"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2M6.5 7l.8 13h9.4l.8-13M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-sq" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+    <symbol id="i-puzzle" viewBox="0 0 24 24"><path d="M10 3.5a2 2 0 0 1 4 0V5h3.5A1.5 1.5 0 0 1 19 6.5V10h1.5a2 2 0 0 1 0 4H19v5a1 1 0 0 1-1 1h-5v-1.5a2 2 0 0 0-4 0V20H5a1 1 0 0 1-1-1v-5H5.5a2 2 0 0 0 0-4H4V6.5A1.5 1.5 0 0 1 5.5 5H10z"/></symbol>
+    <symbol id="i-package" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="m6.5 8.5 5.5-5.5 5.5 5.5"/><path d="M4 20.5h16"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.8 6.3.8-4.6 4.4 1.2 6.2L12 17.2 6.4 20.2l1.2-6.2L3 9.6l6.3-.8z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9.5" r="1.8"/><path d="m3.5 18 5-5 3.5 3.5 4-4 4.5 4.5"/></symbol>
+    <symbol id="i-paint" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.2 0 2-.9 2-2 0-.6-.2-1-.6-1.4-.4-.4-.6-.9-.6-1.4 0-1.1.9-2 2-2h2.3A4.9 4.9 0 0 0 21 9.2C20.7 5.7 16.7 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tools" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 20V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v15"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 19.5c0-3.6 3-6 7-6s7 2.4 7 6"/></symbol>
+    <symbol id="i-user-plus" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.4"/><path d="M3.5 19.5c0-3.4 2.9-5.6 6.5-5.6 1 0 2 .17 2.85.5"/><path d="M18.5 14v6M15.5 17h6"/></symbol>
+    <symbol id="i-user-check" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.4"/><path d="M3.5 19.5c0-3.4 2.9-5.6 6.5-5.6 1 0 2 .17 2.85.5"/><path d="M15 17.5l2 2 3.5-4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15.5 5.4a3.2 3.2 0 0 1 0 5.2"/><path d="M17 14.2c2.1.6 3.5 2.4 3.5 4.8"/></symbol>
+    <symbol id="i-dots-v" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.9" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.9" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.9" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.6"/><rect x="3" y="13" width="18" height="7" rx="1.6"/><path d="M7 7.5h.01M7 16.5h.01"/><path d="M11 7.5h5M11 16.5h5"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2"/><path d="m7 9.5 3 2.5-3 2.5"/><path d="M12.5 15h4.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6.5h11M8.5 12h11M8.5 17.5h11"/><path d="M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></symbol>
+  </defs>
+</svg>
+
+<div id="app">
+  <!-- ===== 启动加载遮罩：主窗口一显示就能看到「正在启动」，避免用户以为没启动 ===== -->
+  <div id="bootMask">
+    <div class="boot-inner">
+      <svg class="boot-logo" viewBox="0 0 512 512">
+        <defs><linearGradient id="bootg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#0f766e"/>
+        </linearGradient></defs>
+        <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bootg)"/>
+        <rect x="136" y="160" width="84" height="220" rx="24" fill="#fff"/>
+        <rect x="136" y="296" width="205" height="84" rx="24" fill="#fff"/>
+        <rect x="328" y="128" width="42" height="42" rx="10" fill="#a7f3d0"/>
+        <rect x="392" y="66" width="30" height="30" rx="8" fill="#a7f3d0"/>
+        <rect x="306" y="46" width="21" height="21" rx="6" fill="#a7f3d0"/>
+      </svg>
+      <div class="boot-name">XLC <b>Launcher</b></div>
+      <div class="boot-sub">XERO LITE CRAFT LAUNCHER</div>
+      <div class="boot-bar"><i id="bootBarFill"></i></div>
+      <div class="boot-tip" id="bootTip">正在启动…</div>
+    </div>
+  </div>
+  <!-- ===== 侧边栏 ===== -->
+  <aside id="rail">
+    <div id="railInd" aria-hidden="true"></div>
+    <div class="rail-logo" title="Xero Lite Craft Launcher 1.0">
+      <svg viewBox="0 0 512 512" width="40" height="40">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#0f766e"/>
+        </linearGradient></defs>
+        <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#lg)"/>
+        <rect x="136" y="160" width="84" height="220" rx="24" fill="#fff"/>
+        <rect x="136" y="296" width="205" height="84" rx="24" fill="#fff"/>
+        <rect x="328" y="128" width="42" height="42" rx="10" fill="#a7f3d0"/>
+        <rect x="392" y="66" width="30" height="30" rx="8" fill="#a7f3d0"/>
+        <rect x="306" y="46" width="21" height="21" rx="6" fill="#a7f3d0"/>
+      </svg>
+    </div>
+    <nav id="railNav">
+      <button class="rail-btn active" data-page="home" title="主页"><svg class="ic"><use href="#i-home"/></svg></button>
+      <button class="rail-btn" data-page="download" title="下载"><svg class="ic"><use href="#i-download"/></svg></button>
+      <button class="rail-btn" data-page="tools" title="工具箱"><svg class="ic"><use href="#i-tools"/></svg></button>
+      <button class="rail-btn" data-page="plugins" title="插件"><svg class="ic"><use href="#i-puzzle"/></svg></button>
+      <button class="rail-btn" data-page="account" title="账户"><svg class="ic"><use href="#i-user"/></svg></button>
+      <button class="rail-btn" data-page="friends" title="好友"><svg class="ic"><use href="#i-user-plus"/></svg></button>
+      <button class="rail-btn" data-page="mp" title="联机"><svg class="ic"><use href="#i-users"/></svg></button>
+      <button class="rail-btn" data-page="diag" title="诊断"><svg class="ic"><use href="#i-pulse"/></svg></button>
+      <button class="rail-btn" data-page="import" title="导入"><svg class="ic"><use href="#i-import"/></svg></button>
+      <button class="rail-btn" data-page="settings" title="设置"><svg class="ic"><use href="#i-settings"/></svg></button>
+    </nav>
+    <div class="rail-bottom">
+      <div class="avatar" id="avatar" title="离线模式">S</div>
+    </div>
+  </aside>
+
+  <!-- ===== 右侧主区 ===== -->
+  <div id="main">
+    <header id="titlebar">
+      <span class="tb-name">XLC <b>Launcher</b></span>
+      <span class="tb-pill" id="tbSource">BMCLAPI</span>
+      <div class="tb-win">
+        <button id="btnMin" title="最小化"><svg class="ic"><use href="#i-minus"/></svg></button>
+        <button id="btnMax" title="最大化 / 还原"><svg class="ic"><use href="#i-sq"/></svg></button>
+        <button id="btnClose" title="关闭"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+    </header>
+
+    <div id="content">
+
+      <!-- ===== 主页 ===== -->
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-left">
+            <div class="hero-id">
+              <div class="hero-head-wrap" id="heroHeadWrap" title="当前皮肤头像">
+                <canvas class="hero-head" id="heroHead" width="120" height="120"></canvas>
+              </div>
+              <div class="hero-id-tx">
+                <h1>准备好开始冒险了吗，<span id="heroName">Steve</span>？</h1>
+                <p class="hero-sub">当前版本 <b id="heroVer">—</b> · 离线模式 · <span id="heroState">就绪</span></p>
+              </div>
+            </div>
+            <p class="hero-credit">致谢 <a href="javascript:void(0)" id="creditSsb" title="前往 抖音 @社会边Studio 主页">社会边Studio</a></p>
+          </div>
+          <div class="hero-actions">
+            <button class="play-fab" id="btnLaunch" title="启动游戏">
+              <svg class="ic"><use href="#i-play"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="select-row card-row">
+          <div class="field">
+            <span>游戏版本</span>
+            <div class="vsel" id="vsel">
+              <select id="selVersion" style="display:none" tabindex="-1" aria-hidden="true"></select>
+              <button type="button" class="vsel-btn" id="vselBtn">—</button>
+              <div class="vsel-panel" id="vselPanel"></div>
+            </div>
+          </div>
+          <label class="field">
+            <span>存档（可选）</span>
+            <select id="selWorld"><option value="">不指定 · 进入游戏后选择</option></select>
+          </label>
+          <label class="field">
+            <span>玩家名</span>
+            <input type="text" id="inpName" maxlength="16" placeholder="Steve">
+          </label>
+        </div>
+
+        <div class="home-grid">
+          <div class="card log-card">
+            <div class="card-head"><h3><svg class="ic sm"><use href="#i-box"/></svg> 启动日志</h3>
+              <button class="ghost-btn" id="btnClearLog">清空</button></div>
+            <div class="terminal" id="logPanel"><div class="t-dim">等待操作…</div></div>
+          </div>
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h3><svg class="ic sm"><use href="#i-globe"/></svg> 我的存档</h3>
+                <div class="card-head-acts">
+                  <button class="ghost-btn" id="btnSaveHub" title="存档管理（预览 / 删除）"><svg class="ic sm"><use href="#i-dots-v"/></svg></button>
+                  <button class="ghost-btn" id="btnRescan" title="重新扫描存档"><svg class="ic sm"><use href="#i-refresh"/></svg></button>
+                </div></div>
+              <div id="worldList" class="mini-list"></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3><svg class="ic sm"><use href="#i-clock"/></svg> 最近游玩</h3></div>
+              <div id="playList" class="mini-list"><div class="empty-sm">暂无记录</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 存档管理 ===== -->
+      <section class="page" id="page-saves">
+        <div class="page-head">
+          <div><h2>存档管理</h2><p>已加载区块地图预览 · 删除（移入回收站可还原）· 打开目录 · 一键跳转种子地图</p></div>
+          <div style="display:flex;gap:10px">
+            <button class="btn ghost" id="btnSaveRefresh"><svg class="ic sm"><use href="#i-refresh"/></svg> 重新扫描</button>
+            <button class="btn ghost" id="btnSaveBack"><svg class="ic sm"><use href="#i-home"/></svg> 返回主页</button>
+          </div>
+        </div>
+        <div class="saves-wrap">
+          <div class="saves-list" id="savesList"><div class="empty-sm">扫描存档中…</div></div>
+          <div class="card saves-detail" id="savesDetail">
+            <div class="empty-sm">← 选择左侧存档查看地图预览</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 下载页 ===== -->
+      <section class="page" id="page-download">
+        <div class="page-head">
+          <div><h2 id="dlTitle">下载游戏</h2><p id="dlSub">官方版本清单 · 支持 <b>BMCLAPI 镜像</b> 与 Mojang 官方源 · Vanilla / Fabric / Quilt / Forge / NeoForge · <b>多线程下载</b></p></div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="btn ghost" id="btnCustomDl" title="通过 URL 下载任意文件到游戏目录"><svg class="ic sm"><use href="#i-upload"/></svg> 自定义文件</button>
+            <div class="searchbox">
+              <svg class="ic sm"><use href="#i-search"/></svg>
+              <input type="text" id="verSearch" placeholder="搜索版本…">
+            </div>
+          </div>
+        </div>
+        <div class="tabs" id="dlTabs">
+          <button class="tab active" data-cat="release">正式版</button>
+          <button class="tab" data-cat="snapshot">快照版</button>
+          <button class="tab" data-cat="old">远古版本</button>
+          <button class="tab" data-cat="all">全部</button>
+          <button class="tab" data-cat="mod">MOD</button>
+          <button class="tab" data-cat="modpack">整合包</button>
+          <button class="tab" data-cat="resourcepack">资源包</button>
+          <button class="tab" data-cat="datapack">数据包</button>
+        </div>
+        <div class="ver-list" id="verList"><div class="empty-sm">加载版本清单中…</div></div>
+        <div id="resArea" style="display:none">
+          <div class="dl-res-head">
+            <div class="searchbox">
+              <svg class="ic sm"><use href="#i-search"/></svg>
+              <input type="text" id="resSearch" placeholder="搜索 MOD（支持中文，如「小地图」）…">
+            </div>
+            <div class="src-switch" id="resSource" title="MOD 下载源">
+              <button data-src="modrinth">Modrinth</button>
+              <button data-src="curseforge">CurseForge</button>
+              <button class="active" data-src="all" title="两个源一起搜，按下载量排序（默认）">综合</button>
+            </div>
+            <label class="field">
+              <span>目标版本（选「全部」则不筛版本）</span>
+              <select id="resTarget"></select>
+            </label>
+          </div>
+          <div class="ver-list" id="resList"><div class="empty-sm">加载中…</div></div>
+          <div class="pager" id="resPager"></div>
+        </div>
+        <div id="mpArea" style="display:none">
+          <div class="dl-res-head">
+            <div class="searchbox">
+              <svg class="ic sm"><use href="#i-search"/></svg>
+              <input type="text" id="mpSearch" placeholder="搜索整合包（支持中文）…">
+            </div>
+          </div>
+          <div class="ver-list" id="mpList"><div class="empty-sm">加载中…</div></div>
+          <div class="pager" id="mpPager"></div>
+        </div>
+        <div id="rpArea" style="display:none">
+          <div class="dl-res-head">
+            <div class="searchbox">
+              <svg class="ic sm"><use href="#i-search"/></svg>
+              <input type="text" id="rpSearch" placeholder="搜索资源包（支持中文）…">
+            </div>
+          </div>
+          <div class="ver-list" id="rpList"><div class="empty-sm">加载中…</div></div>
+          <div class="pager" id="rpPager"></div>
+        </div>
+        <div id="dpArea" style="display:none">
+          <div class="dl-res-head">
+            <div class="searchbox">
+              <svg class="ic sm"><use href="#i-search"/></svg>
+              <input type="text" id="dpSearch" placeholder="搜索数据包（支持中文）…">
+            </div>
+            <label class="field">
+              <span>目标存档（数据包装进对应世界）</span>
+              <select id="dpWorld"></select>
+            </label>
+          </div>
+          <div class="ver-list" id="dpList"><div class="empty-sm">加载中…</div></div>
+          <div class="pager" id="dpPager"></div>
+        </div>
+      </section>
+
+      <!-- ===== 工具箱页 ===== -->
+      <section class="page" id="page-tools">
+        <div class="page-head">
+          <div><h2>工具箱</h2><p>MC 实用网站资源集合 · 点击卡片用系统浏览器打开</p></div>
+        </div>
+        <div id="toolsWrap"><div class="empty-sm">加载中…</div></div>
+      </section>
+
+      <!-- ===== 插件页 ===== -->
+      <section class="page" id="page-plugins">
+        <!-- 插件列表 -->
+        <div id="plgHome">
+          <div class="page-head">
+            <div><h2>插件</h2><p>扩展启动器能力 · 内置插件可在卡片右侧启用或停用</p></div>
+            <button class="btn ghost" id="btnPlgRefresh"><svg class="ic sm"><use href="#i-refresh"/></svg> 刷新</button>
+          </div>
+          <div id="pluginsList"><div class="empty-sm">加载中…</div></div>
+          <div class="plg-tip">
+            <svg class="ic sm"><use href="#i-star"/></svg>
+            <span>插件是启动器内置的能力模块：停用后卡片变灰、无法打开，启用状态保存在本机配置中，重启启动器依然生效。</span>
+          </div>
+        </div>
+
+        <!-- 插件面板：种子地图 -->
+        <div id="plgSeedmap" style="display:none">
+          <div class="plg-head">
+            <button class="btn ghost icon-only" id="btnSeedBack" title="返回插件列表"><svg class="ic sm"><use href="#i-x"/></svg></button>
+            <span class="plg-badge" style="--c:#10b981"><svg class="ic sm"><use href="#i-map"/></svg></span>
+            <div class="plg-head-tx"><h2>种子地图</h2><p>输入种子即可查看该世界的生物群系、村庄、要塞与结构分布</p></div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-search"/></svg> 世界种子</h3>
+            <div class="field-line">
+              <span>种子</span>
+              <input type="text" id="smSeed" placeholder="例如 123456789，也可以填任意文字（支持中文）">
+              <button class="btn ghost" id="btnSmRand" title="随机生成一个种子"><svg class="ic sm"><use href="#i-refresh"/></svg> 随机</button>
+            </div>
+            <div class="field-line">
+              <span>从存档读取</span>
+              <select id="smSave"><option value="">选择存档自动填入种子…</option></select>
+              <button class="btn ghost" id="btnSmSaveSeed"><svg class="ic sm"><use href="#i-download"/></svg> 填入</button>
+            </div>
+            <div class="field-line">
+              <span>平台 / 版本</span>
+              <select id="smPlatform"></select>
+            </div>
+            <div class="field-line">
+              <span>维度</span>
+              <select id="smDim">
+                <option value="overworld">主世界 (Overworld)</option>
+                <option value="nether">下界 (Nether)</option>
+                <option value="end">末地 (The End)</option>
+              </select>
+            </div>
+            <div class="btn-row end">
+              <button class="btn primary" id="btnSmOpen"><svg class="ic sm"><use href="#i-globe"/></svg> 打开种子地图</button>
+            </div>
+          </div>
+          <div class="plg-tip">
+            <svg class="ic sm"><use href="#i-warn"/></svg>
+            <span>种子地图由第三方站点渲染，需要联网，会在启动器内的新窗口打开。种子只能推算世界生成结果（地形 / 生物群系 / 结构），无法还原已经建好的建筑。</span>
+          </div>
+        </div>
+
+        <!-- 插件面板：一键开服 -->
+        <div id="plgServer" style="display:none">
+          <div class="plg-head">
+            <button class="btn ghost icon-only" id="btnSrvBack" title="返回插件列表"><svg class="ic sm"><use href="#i-x"/></svg></button>
+            <span class="plg-badge" style="--c:#f59e0b"><svg class="ic sm"><use href="#i-server"/></svg></span>
+            <div class="plg-head-tx"><h2>一键开服</h2><p>选择服务端核心与版本，自动下载、生成配置并启动服务器</p></div>
+            <div class="btn-row" style="margin-left:auto">
+              <button class="btn ghost" id="btnSrvJavas"><svg class="ic sm"><use href="#i-cpu"/></svg> Java 检测</button>
+            </div>
+          </div>
+
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-zap"/></svg> 新建服务器</h3>
+            <div class="core-grid" id="srvCores"></div>
+            <div class="field-row2">
+              <label class="field"><span>游戏版本</span><select id="srvVersion"><option value="">正在获取版本…</option></select></label>
+              <label class="field"><span>服务器名称（即目录名）</span><input type="text" id="srvName" placeholder="如 我的生存服"></label>
+            </div>
+            <div class="field-row3">
+              <label class="field"><span>内存上限 (MB)</span><input type="number" id="srvMem" value="2048" min="512" step="512"></label>
+              <label class="field"><span>端口</span><input type="number" id="srvPort" value="25565" min="1" max="65535"></label>
+              <label class="field"><span>最大玩家数</span><input type="number" id="srvMax" value="20" min="1" max="200"></label>
+            </div>
+            <div class="field-line">
+              <span>描述 MOTD</span>
+              <input type="text" id="srvMotd" placeholder="显示在多人游戏列表里的名字">
+            </div>
+            <div class="field-row3">
+              <label class="field"><span>难度</span><select id="srvDiff">
+                <option value="peaceful">和平</option><option value="easy" selected>简单</option>
+                <option value="normal">普通</option><option value="hard">困难</option></select></label>
+              <label class="field"><span>游戏模式</span><select id="srvMode">
+                <option value="survival" selected>生存</option><option value="creative">创造</option>
+                <option value="adventure">冒险</option><option value="spectator">旁观</option></select></label>
+              <label class="field"><span>世界种子（可留空）</span><input type="text" id="srvSeed" placeholder="留空 = 随机世界"></label>
+            </div>
+            <label class="radio-row check-row">
+              <input type="checkbox" id="srvOnline" checked>
+              <div class="radio-main"><b>正版验证 (online-mode)</b><span>关闭后离线客户端也能进入，仅建议与朋友联机时临时关闭</span></div>
+            </label>
+            <div class="btn-row end">
+              <button class="btn primary" id="btnSrvCreate"><svg class="ic sm"><use href="#i-download"/></svg> 下载并创建服务器</button>
+            </div>
+            <div class="srv-prog" id="srvProgWrap" style="display:none">
+              <div class="srv-bar"><i id="srvProgBar"></i></div>
+              <span id="srvProgTx">准备中…</span>
+            </div>
+          </div>
+
+          <h3 class="tools-group">我的服务器</h3>
+          <div class="ver-list" id="srvList"><div class="empty-sm">加载中…</div></div>
+
+          <div class="srv-console" id="srvConsole" style="display:none">
+            <div class="srv-console-head">
+              <span class="srv-dot" id="srvDot"></span>
+              <b id="srvConName">—</b>
+              <span class="t-dim" id="srvConMeta"></span>
+              <div class="btn-row" style="margin-left:auto">
+                <button class="btn ghost" id="btnSrvStart"><svg class="ic sm"><use href="#i-play"/></svg> 启动</button>
+                <button class="btn ghost" id="btnSrvStop"><svg class="ic sm"><use href="#i-x"/></svg> 停止</button>
+                <button class="btn ghost" id="btnSrvDir"><svg class="ic sm"><use href="#i-folder"/></svg> 目录</button>
+                <button class="btn ghost" id="btnSrvWan"><svg class="ic sm"><use href="#i-globe"/></svg> 外网联机</button>
+              </div>
+            </div>
+            <div class="srv-addr" id="srvAddrBox" style="display:none"></div>
+            <div class="srv-wan" id="srvWanBox" style="display:none"></div>
+            <div class="srv-log" id="srvLog"><div class="t-dim">服务器日志输出…</div></div>
+            <div class="srv-cmd">
+              <input type="text" id="srvCmd" placeholder="输入服务器命令，如 say 大家好 / op Steve（回车发送）">
+              <button class="btn ghost" id="btnSrvCmd">发送</button>
+            </div>
+          </div>
+
+          <div class="plg-tip">
+            <svg class="ic sm"><use href="#i-warn"/></svg>
+            <span>首次启动会下载原版服务端与依赖库（Paper / Purpur / Fabric 都需要），耗时取决于网络。服务器文件存放在启动器数据的 servers 目录，也可以直接用目录里生成的 start.bat 手动开服。</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 实例管理页 ===== -->
+      <section class="page" id="page-instances">
+        <div class="page-head">
+          <div><h2>实例管理</h2><p>管理已安装的游戏实例 · 启动 / 重命名 / 删除</p></div>
+          <button class="btn ghost" id="btnInstRefresh"><svg class="ic sm"><use href="#i-refresh"/></svg> 刷新</button>
+        </div>
+        <div class="ver-list" id="instList"><div class="empty-sm">加载中…</div></div>
+      </section>
+
+      <!-- ===== 游戏设置页 ===== -->
+      <section class="page" id="page-gsettings">
+        <div class="page-head">
+          <div><h2>游戏设置</h2><p>启动参数 · 实例 MOD 管理</p></div>
+        </div>
+        <div class="tabs" id="gsTabs">
+          <button class="tab active" data-gs="basic">基础设置</button>
+          <button class="tab" data-gs="mods">MOD 管理</button>
+          <button class="tab" data-gs="ver">版本管理</button>
+        </div>
+        <div id="gsBasic">
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-play"/></svg> 启动</h3>
+            <div class="field-line">
+              <span>默认启动实例</span>
+              <select id="gsDefaultVer"></select>
+            </div>
+            <label class="radio-row check-row">
+              <input type="checkbox" id="gsChinese" checked>
+              <div class="radio-main"><b>启动时自动设为简体中文</b><span>游戏内已手动选择其他语言时不覆盖</span></div>
+            </label>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-cpu"/></svg> 内存</h3>
+            <label class="radio-row check-row">
+              <input type="checkbox" id="gsMemAuto" checked>
+              <div class="radio-main"><b>智能内存分配 <em>推荐</em></b><span id="gsMemHint">按物理内存自动推荐</span></div>
+            </label>
+            <div class="field-line" id="gsMemManualRow">
+              <span>手动分配</span>
+              <input type="range" id="gsMem" min="2" max="16" step="1">
+              <b class="mem-val" id="gsMemVal">4 GB</b>
+            </div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-sq"/></svg> 高级</h3>
+            <div class="field-line">
+              <span>额外 JVM 参数（空格分隔）</span>
+              <input type="text" id="gsJvm" placeholder="-XX:+UseZGC -Dfml.ignoreInvalidMinecraftCertificates=true">
+            </div>
+          </div>
+          <div class="btn-row end"><button class="btn primary" id="btnSaveGs"><svg class="ic sm"><use href="#i-check"/></svg> 保存游戏设置</button></div>
+        </div>
+        <div id="gsMods" style="display:none">
+          <div class="dl-res-head">
+            <label class="field">
+              <span>目标实例（MOD 目录为全局，安装请选带加载器的实例）</span>
+              <select id="modTarget"></select>
+            </label>
+            <div class="btn-row">
+              <button class="btn ghost" id="btnModsRefresh"><svg class="ic sm"><use href="#i-refresh"/></svg> 刷新</button>
+              <button class="btn ghost" id="btnModsOpen"><svg class="ic sm"><use href="#i-folder"/></svg> 打开 MOD 目录</button>
+            </div>
+          </div>
+          <div class="res-note warnbar tip" id="modsSummary" style="display:none"></div>
+          <div class="ver-list" id="modList"><div class="empty-sm">加载中…</div></div>
+        </div>
+        <div id="gsVer" style="display:none">
+          <div class="dl-res-head">
+            <label class="field">
+              <span>选择实例</span>
+              <select id="vsInstance"></select>
+            </label>
+            <div class="btn-row">
+              <button class="btn ghost" id="btnVsRefresh"><svg class="ic sm"><use href="#i-refresh"/></svg> 刷新</button>
+            </div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-puzzle"/></svg> 模组加载器</h3>
+            <div class="path-line" id="vsInfo">选择实例后显示加载器信息…</div>
+            <div class="field-line" id="vsBuildRow" style="display:none">
+              <span>构建号（留空 = 最新）</span>
+              <input type="text" id="vsBuild" placeholder="如 47.2.0（仅 Forge / NeoForge 有效）">
+            </div>
+            <div class="btn-row" style="margin-top:12px">
+              <button class="btn primary" id="btnVsChange"><svg class="ic sm"><use href="#i-download"/></svg> 更改加载器</button>
+              <button class="btn ghost" id="btnVsUninstall"><svg class="ic sm"><use href="#i-trash"/></svg> 卸载加载器</button>
+            </div>
+            <p class="hint">更改 = 用所选加载器重建当前实例（实例名不变，MOD / 存档 / 设置全部保留，失败自动回滚）。卸载 = 重建为同 MC 版本的原版实例（MOD 保留但不再加载）。</p>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-package"/></svg> 导出整合包</h3>
+            <p class="hint">与下载页导出不同：这里可以自选打包内容（MOD / 配置 / 资源包 / 光影 / 存档 / 选项设置）。</p>
+            <div class="btn-row">
+              <button class="btn primary" id="btnVsExport"><svg class="ic sm"><use href="#i-upload"/></svg> 导出此实例…</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 账户页 ===== -->
+      <section class="page" id="page-account">
+        <div class="page-head">
+          <div><h2>账户</h2><p>多账户管理 · 自定义皮肤（离线注入，单人/局域网联机可见）</p></div>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-user-plus"/></svg> 添加账户</h3>
+          <div class="btn-row" style="margin-bottom:12px">
+            <button class="btn ghost acc-type active" data-atype="offline">离线账户</button>
+            <button class="btn ghost acc-type" data-atype="ms">微软正版登录</button>
+            <button class="btn ghost acc-type" data-atype="authlib">第三方外置登录</button>
+          </div>
+
+          <!-- 离线 -->
+          <div class="acc-form" id="accFormOffline">
+            <div class="field-line">
+              <span>玩家名</span>
+              <input id="accName" type="text" maxlength="16" placeholder="2-16 个字母 / 数字 / 下划线（如 Steve）" />
+              <button class="btn" id="btnAccAdd">添加</button>
+            </div>
+            <p class="hint">离线账户可自定义皮肤（本地注入，单人/局域网联机可见）。</p>
+          </div>
+
+          <!-- 微软正版 -->
+          <div class="acc-form" id="accFormMs" style="display:none">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <button class="btn" id="btnMsLogin"><svg class="ic sm"><use href="#i-user-plus"/></svg> 使用微软账户登录</button>
+              <span class="mut" id="msStatus" style="font-size:12.5px"></span>
+            </div>
+            <p class="hint">点上面的按钮，会在<b>启动器自己的窗口</b>里打开<b>微软官方</b>登录页（login.live.com）——登录完自动回到这里并添加账户。不用注册任何应用、不用跳浏览器、也不用抄代码，密码全程不经过启动器。登录后会自动确认该账户<b>是否已购买 Minecraft</b>。</p>
+            <div class="ms-steps" id="msSteps" style="display:none"></div>
+            <details class="acc-adv">
+              <summary>高级选项（一般不需要动）</summary>
+              <p class="hint">默认用的是启动器内置的微软官方客户端 ID（公共客户端，不是密钥），所以上面那个按钮开箱即可用。只有你自己在 Azure 门户注册了应用、或想改用系统浏览器 / 设备码登录时才需要动这里。</p>
+              <div class="field-line">
+                <span>应用 ID</span>
+                <input id="msClientId" type="text" placeholder="你自己的 Azure 应用(客户端) ID">
+              </div>
+              <div class="btn-row">
+                <button class="btn ghost" id="btnMsBrowser"><svg class="ic sm"><use href="#i-globe"/></svg> 用系统浏览器登录</button>
+                <button class="btn ghost" id="btnMsDevice">改用设备码登录</button>
+              </div>
+              <p class="hint" id="msNeedId" style="display:none;color:#e6a23c">「系统浏览器登录」和「设备码登录」需要你自己的 Azure 应用 ID（公共客户端，无需密钥）：受支持的账户类型要包含个人账户，平台选「移动和桌面应用程序」、重定向 URI 填 http://localhost，权限只需 XboxLive.signin + offline_access。</p>
+              <div id="msAuthBox" style="display:none;margin-top:10px">
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                  <div style="font-size:26px;font-weight:700;letter-spacing:3px;color:var(--acc2)" id="msUserCode">—</div>
+                  <button class="btn ghost" id="btnMsCopy">复制代码</button>
+                  <button class="btn ghost" id="btnMsOpen"><svg class="ic sm"><use href="#i-globe"/></svg> 打开验证页面</button>
+                  <span class="mut" id="msDevStatus" style="font-size:12.5px">等待授权中…</span>
+                </div>
+                <p class="hint">访问 <b id="msVerifyUrl">https://www.microsoft.com/link</b>，登录微软账户并输入上面的代码完成授权。授权成功后会自动添加账户。</p>
+              </div>
+            </details>
+          </div>
+
+          <!-- 外置登录 -->
+          <div class="acc-form" id="accFormAuthlib" style="display:none">
+            <div class="field-line">
+              <span>服务器</span>
+              <select id="authlibPreset">
+                <option value="littleskin">LittleSkin（little skin 中国大陆站点）</option>
+                <option value="custom">自定义 authlib-injector 服务器</option>
+              </select>
+            </div>
+            <div class="field-line" id="authlibCustomRow" style="display:none">
+              <span>服务器地址</span>
+              <input id="authlibServer" type="text" placeholder="https://auth.example.com（Yggdrasil API 根地址）">
+            </div>
+            <div class="field-line">
+              <span>账号</span>
+              <input id="authlibUser" type="text" placeholder="邮箱或角色名">
+            </div>
+            <div class="field-line">
+              <span>密码</span>
+              <input id="authlibPass" type="password" placeholder="认证服务器密码（不会上传到任何第三方）">
+              <button class="btn" id="btnAuthlibLogin">登录</button>
+            </div>
+            <p class="hint">皮肤、披风由认证服务器提供，进入服务器时以正版方式验证（authlib-injector）。密码仅用于向该服务器登录，不会保存。</p>
+          </div>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-user"/></svg> 账户列表 <span id="accCurTag" class="mut" style="font-weight:400;font-size:12px"></span></h3>
+          <div class="ver-list" id="accList"><div class="empty-sm">还没有账户，先在上面添加一个</div></div>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-user-check"/></svg> 当前账户皮肤预览</h3>
+          <div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap">
+            <canvas id="skinPreview" width="160" height="320" style="image-rendering:pixelated;border-radius:8px;background:rgba(127,127,127,.12)"></canvas>
+            <div class="mut" style="max-width:440px;font-size:13px;line-height:1.8">
+              皮肤文件要求：<b>64x64</b>（新版）或 <b>64x32</b>（旧版）的 PNG。未上传时使用<b>默认皮肤（史蒂夫）</b>。<br/>
+              模型说明：经典（Steve，4px 手臂）/ 苗条（Alex，3px 手臂），需与皮肤文件匹配。<br/>
+              皮肤通过内置离线验证服务注入，对<b>单人游戏与局域网/联机房间</b>内的玩家可见（正版皮肤服务器不受影响）。
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 好友页 ===== -->
+      <section class="page" id="page-friends">
+        <div class="page-head">
+          <div><h2>好友</h2><p>专属好友码 · 每人只有一个且互不相同 · 凭码添加好友 · 在线状态实时显示</p></div>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-user-check"/></svg> 我的好友码</h3>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span style="font-size:26px;font-weight:800;letter-spacing:2px;color:var(--acc2)" id="frMyCode">—</span>
+            <button class="btn ghost" id="frBtnCopy"><svg class="ic sm"><use href="#i-sq"/></svg> 复制好友码</button>
+          </div>
+          <p class="hint">好友码是你在 XLC 的专属身份码：每人只有一个、互不相同、生成后终身不变。把它发给朋友，朋友在下方输入即可添加你为好友。</p>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-user-plus"/></svg> 添加好友</h3>
+          <div class="field-line">
+            <span>好友码</span>
+            <input id="frInputCode" placeholder="XXXX-XXXX-XXXX" spellcheck="false" maxlength="14" style="text-transform:uppercase">
+            <button class="btn primary" id="frBtnAdd"><svg class="ic sm"><use href="#i-user-plus"/></svg> 添加</button>
+          </div>
+          <p class="hint">输入朋友的专属好友码即可添加（不能添加自己的好友码，重复添加会被拦截）。</p>
+        </div>
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-users"/></svg> 好友列表</h3>
+          <div class="ver-list" id="frList"><div class="empty-sm">加载中…</div></div>
+          <p class="hint" id="frPresenceHint">在线状态检测中…</p>
+        </div>
+      </section>
+
+      <!-- ===== 联机页（陶瓦联机） ===== -->
+      <section class="page" id="page-mp">
+        <div class="page-head">
+          <div><h2>联机</h2><p>陶瓦联机 Terracotta · 基于 EasyTier 的免费 P2P 联机</p></div>
+        </div>
+
+        <div id="mpSetup" class="card set-card" style="display:none">
+          <h3><svg class="ic sm"><use href="#i-download"/></svg> 联机组件</h3>
+          <p class="hint">首次使用需下载陶瓦联机组件（约 8 MB，自动通过国内镜像加速）。</p>
+          <div id="mpDlInfo" class="hint" style="display:none"></div>
+          <button id="mpBtnDownload" class="btn primary"><svg class="ic sm"><use href="#i-download"/></svg> 下载联机组件</button>
+        </div>
+
+        <div id="mpMain" style="display:none">
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-users"/></svg> 联机大厅</h3>
+            <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div>
+                <b>建房（房主）</b>
+                <p class="hint">启动你的世界 → 按 Esc → 「对局域网开放」，陶瓦自动识别并生成房间码。</p>
+                <button id="mpBtnHost" class="btn primary"><svg class="ic sm"><use href="#i-play"/></svg> 创建房间</button>
+              </div>
+              <div>
+                <b>加入房间</b>
+                <p class="hint">输入朋友给你的房间码（U/XXXX-XXXX-XXXX-XXXX）。</p>
+                <div class="field-line"><input id="mpInputCode" placeholder="U/XXXX-XXXX-XXXX-XXXX" spellcheck="false"></div>
+                <button id="mpBtnJoin" class="btn"><svg class="ic sm"><use href="#i-globe"/></svg> 加入</button>
+              </div>
+            </div>
+          </div>
+          <div class="card set-card" id="mpStatusCard" style="display:none">
+            <div id="mpStatusLine" style="font-weight:600"></div>
+            <div id="mpCodeRow" style="display:none;margin:10px 0">
+              <span style="font-size:26px;font-weight:800;letter-spacing:2px;color:var(--acc2)" id="mpCodeBig"></span>
+              <button id="mpBtnCopy" class="btn ghost" style="margin-left:10px">复制房间码</button>
+            </div>
+            <div id="mpUrlRow" style="display:none;margin:10px 0">
+              <span style="font-size:20px;font-weight:700;color:var(--acc2)" id="mpUrlBig"></span>
+              <button id="mpBtnCopyUrl" class="btn ghost" style="margin-left:10px">复制地址</button>
+            </div>
+            <p class="hint" id="mpHint"></p>
+            <button id="mpBtnLeave" class="btn ghost" style="display:none"><svg class="ic sm"><use href="#i-x"/></svg> 中断联机</button>
+          </div>
+        </div>
+
+        <!-- 好友联机 -->
+        <div class="card set-card" style="margin-top:16px">
+          <h3><svg class="ic sm"><use href="#i-user-check"/></svg> 好友联机</h3>
+          <p class="hint">到「好友」页点击<b>在线好友</b>的「邀请联机」发起邀请。对方同意后双方自动进入联机房间：<b>发起方</b>在游戏里进入世界 → Esc → 「对局域网开放」，<b>受邀方</b>进游戏多人模式即可看到并加入对方的世界。</p>
+        </div>
+      </section>
+
+      <!-- ===== 诊断页 ===== -->
+      <section class="page" id="page-diag">
+        <div class="page-head">
+          <div><h2>诊断</h2><p>启动器与游戏崩溃自动分析 · AI 深度排查</p></div>
+          <button class="ghost-btn" id="btnDiagOpenDir"><svg class="ic sm"><use href="#i-folder"/></svg> 诊断记录目录</button>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic"><use href="#i-pulse"/></svg> 游戏崩溃诊断</h3>
+          <div class="field-line">
+            <span>实例</span>
+            <select id="diagInstance"></select>
+          </div>
+          <div class="row" style="display:flex;gap:8px;margin:10px 0;">
+            <button class="btn primary" id="btnDiagGame"><svg class="ic sm"><use href="#i-pulse"/></svg> 诊断最近一次崩溃</button>
+          </div>
+          <div id="diagGameOut"><div class="empty-sm">游戏异常退出时会自动跳转到这里分析；也可以手动点上面的按钮。</div></div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic"><use href="#i-star"/></svg> AI 深度分析</h3>
+          <p class="diag-note">内置规则认不出的崩溃，可交给 AI 分析（任意 OpenAI 兼容接口，Key 只保存在本机配置文件）。</p>
+          <div class="field-line"><span>接口地址</span><input id="aiBase" placeholder="https://api.openai.com（或任意兼容服务）"></div>
+          <div class="field-line"><span>API Key</span><input id="aiKey" type="password" placeholder="sk-..."></div>
+          <div class="field-line"><span>模型</span><input id="aiModel" placeholder="gpt-4o-mini / deepseek-chat 等"></div>
+          <div class="row" style="display:flex;gap:8px;margin:10px 0;">
+            <button class="btn" id="btnAiSave">保存 AI 设置</button>
+            <button class="btn primary" id="btnDiagAi">AI 分析上面的崩溃</button>
+          </div>
+          <div id="diagAiOut"></div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic"><use href="#i-warn"/></svg> 启动器崩溃记录</h3>
+          <p class="diag-note">启动器自身异常退出（闪退、白屏、报错）会被自动记录，重启后在这里查看。</p>
+          <div id="diagLaunchList"></div>
+        </div>
+      </section>
+
+      <!-- ===== 导入页 ===== -->
+      <section class="page" id="page-import">
+        <div class="page-head">
+          <div><h2>导入 / 整合包</h2><p>把已有 .minecraft 目录纳入 XLC 管理 · 整合包一键导出与安装</p></div>
+        </div>
+        <div class="imp-grid">
+          <div class="card imp-card">
+            <div class="imp-ic"><svg class="ic"><use href="#i-folder"/></svg></div>
+            <h3>导入游戏目录</h3>
+            <p>选择 .minecraft 或自定义游戏目录，XLC 将扫描其中的所有版本（含 Fabric / Forge 等）与存档。</p>
+            <button class="btn primary" id="btnImportDir">选择目录</button>
+          </div>
+          <div class="card imp-card">
+            <div class="imp-ic"><svg class="ic"><use href="#i-import"/></svg></div>
+            <h3>导入整合包</h3>
+            <p>XLC (.lmcmod) / Modrinth (.mrpack) / CurseForge (.zip) 一键导入。</p>
+            <button class="btn primary" id="btnImportModpack">选择整合包文件</button>
+          </div>
+          <div class="card imp-card">
+            <div class="imp-ic"><svg class="ic"><use href="#i-upload"/></svg></div>
+            <h3>导出整合包</h3>
+            <p>把当前版本 + MOD + 设置打包成 .lmcmod，分享或备份。</p>
+            <label class="field">
+              <span>选择要导出的版本</span>
+              <select id="expVersion"></select>
+            </label>
+            <button class="btn primary" id="btnExportModpack">导出 .lmcmod</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><svg class="ic sm"><use href="#i-clock"/></svg> 当前游戏目录</h3>
+            <button class="ghost-btn" id="btnOpenDir"><svg class="ic sm"><use href="#i-external"/></svg> 打开</button></div>
+          <div class="path-line" id="curGameDir">—</div>
+          <div class="scan-summary" id="scanSummary">—</div>
+        </div>
+      </section>
+
+      <!-- ===== 设置页 ===== -->
+      <section class="page" id="page-settings">
+        <div class="page-head">
+          <div><h2>设置</h2><p>下载源 · Java 环境 · 性能 · 个性化</p></div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-globe"/></svg> 下载源</h3>
+          <label class="radio-row">
+            <input type="radio" name="src" value="bmclapi">
+            <div class="radio-main"><b>BMCLAPI 镜像 <em>推荐</em></b><span>bmclapi2.bangbang93.com · 国内高速</span></div>
+            <span class="lat" id="latBmclapi">—</span>
+          </label>
+          <label class="radio-row">
+            <input type="radio" name="src" value="official">
+            <div class="radio-main"><b>Mojang 官方源</b><span>launchermeta.mojang.com</span></div>
+            <span class="lat" id="latOfficial">—</span>
+          </label>
+          <div class="field-line">
+            <span>自定义镜像</span>
+            <input type="text" id="setCustomSrc" placeholder="https://your-mirror.example.com">
+          </div>
+          <div class="btn-row">
+            <button class="btn ghost" id="btnPing"><svg class="ic sm"><use href="#i-zap"/></svg> 测速</button>
+            <button class="btn ghost" id="btnPingAuto"><svg class="ic sm"><use href="#i-zap"/></svg> 自动选择最快</button>
+          </div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-refresh"/></svg> 版本更新</h3>
+          <div class="upd-top">
+            <div class="upd-now"><span>当前版本</span><b id="updCurVer">—</b></div>
+            <div class="upd-state" id="updState">
+              <i class="upd-dot" id="updDot"></i><span id="updStateTx">尚未检测</span>
+            </div>
+          </div>
+          <div class="field-line">
+            <span>更新检测地址</span>
+            <input type="text" id="setUpdateUrl" readonly title="更新源已锁定为官方下载页，不可修改">
+            <span class="lock-pill" id="updLockPill" title="更新源已锁定：启动器只从这个官方地址检测更新，任何人都改不了"><svg class="ic sm"><use href="#i-lock"/></svg> 已锁定</span>
+          </div>
+          <p class="hint">更新源已<b>锁定</b>为官方下载页：启动器只从这一个地址读取最新版本（页面里的 <b>XLC-Launcher-&lt;版本&gt;-Setup.exe</b> / <b>-portable.exe</b>）。这样别人即使改了你的配置、或诱导你换成第三方地址，也没法让启动器下载伪造的安装包。</p>
+          <label class="check-row">
+            <input type="checkbox" id="setAutoUpd" checked>
+            <span>启动时自动检测更新（发现新版本时提示）</span>
+          </label>
+          <div class="btn-row">
+            <button class="btn primary" id="btnCheckUpdate"><svg class="ic sm"><use href="#i-search"/></svg> 检测更新</button>
+            <button class="btn ghost" id="btnUpdChangelog"><svg class="ic sm"><use href="#i-list"/></svg> 更新公告</button>
+            <button class="btn ghost" id="btnUpdOpenPage"><svg class="ic sm"><use href="#i-external"/></svg> 打开下载页</button>
+          </div>
+          <div id="updResult"></div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-cpu"/></svg> Java 运行时</h3>
+          <div class="field-line">
+            <span>Java 路径</span>
+            <input type="text" id="setJavaPath" placeholder="自动检测中…">
+          </div>
+          <div id="javaList" class="mini-list"></div>
+          <div class="field-line">
+            <span>下载 Java</span>
+            <select id="javaDlVer" style="width:130px">
+              <option value="8">Java 8</option>
+              <option value="17">Java 17</option>
+              <option value="21" selected>Java 21</option>
+              <option value="25">Java 25</option>
+            </select>
+            <button class="btn primary" id="btnDlJava"><svg class="ic sm"><use href="#i-download"/></svg> 下载安装</button>
+          </div>
+          <p class="hint">从微软 / Oracle / Adoptium 多源下载（自动回退），已装过的版本会直接复用。首次下载约 1-5 分钟，完成后自动加入上方列表。</p>
+          <div class="btn-row"><button class="btn ghost" id="btnDetectJava"><svg class="ic sm"><use href="#i-refresh"/></svg> 重新检测</button></div>
+        </div>
+
+        <div class="card set-card">
+          <h3><svg class="ic sm"><use href="#i-drive"/></svg> 性能与目录</h3>
+          <div class="field-line">
+            <span>内存分配</span>
+            <input type="range" id="setMem" min="2" max="16" step="1">
+            <b class="mem-val" id="memVal">4 GB</b>
+          </div>
+          <div class="field-line">
+            <span>游戏目录</span>
+            <input type="text" id="setGameDir" readonly>
+            <button class="btn ghost" id="btnPickDir">浏览</button>
+          </div>
+          <div class="field-line">
+            <span>下载线程数（多线程下载，1 = 单线程）</span>
+            <input type="number" id="setDlThreads" min="1" max="64" step="1" style="width:90px">
+          </div>
+          <div class="field-line">
+            <span>玩家名</span>
+            <input type="text" id="setUsername" maxlength="16">
+          </div>
+          <div class="btn-row end"><button class="btn primary" id="btnSaveSettings"><svg class="ic sm"><use href="#i-check"/></svg> 保存设置</button></div>
+        </div>
+
+        <!-- ===== 个性化（并入设置页） ===== -->
+        <div id="page-personal">
+          <div class="page-head" style="margin-top:26px">
+            <div><h2>个性化</h2><p>背景 · 主题色 · 外观自定义</p></div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-image"/></svg> 背景</h3>
+            <div class="bg-mode-list" id="bgModeList">
+              <label class="radio-row">
+                <input type="radio" name="bgMode" value="default" checked>
+                <div class="radio-main"><b>默认纯色背景</b><span>启动器经典深色主题</span></div>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="bgMode" value="panorama">
+                <div class="radio-main"><b>MC 全景背景 <em>需手动开启</em></b><span>Minecraft 风格全景图，选中即表示同意启用</span></div>
+              </label>
+              <label class="radio-row">
+                <input type="radio" name="bgMode" value="image">
+                <div class="radio-main"><b>自定义图片背景</b><span id="bgImgHint">支持 PNG / JPG / WebP / GIF</span></div>
+              </label>
+            </div>
+            <div class="btn-row" style="margin-top:10px">
+              <button class="btn ghost" id="btnPickBg"><svg class="ic sm"><use href="#i-upload"/></svg> 选择图片…</button>
+            </div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-paint"/></svg> 背景颜色</h3>
+            <div class="field-line">
+              <span>纯色背景（同时影响默认模式底色）</span>
+              <span class="color-wrap"><input type="color" id="pBgColor" value="#0b0d11"><button class="btn ghost" id="btnBgReset">恢复默认</button></span>
+            </div>
+            <div class="swatch-row" id="bgSwatches"></div>
+          </div>
+          <div class="card set-card">
+            <h3><svg class="ic sm"><use href="#i-palette"/></svg> 窗口颜色（主题色）</h3>
+            <div class="field-line">
+              <span>按钮、高亮、进度条等强调色</span>
+              <span class="color-wrap"><input type="color" id="pAccent" value="#10b981"><button class="btn ghost" id="btnAccentReset">恢复默认</button></span>
+            </div>
+            <div class="swatch-row" id="accentSwatches"></div>
+          </div>
+          <div class="btn-row end"><button class="btn primary" id="btnSavePersonal"><svg class="ic sm"><use href="#i-check"/></svg> 保存个性化设置</button></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 状态栏 -->
+    <footer id="statusbar">
+      <span class="st-dot" id="stDot"></span>
+      <span id="stText">就绪</span>
+      <span class="st-right" id="stRight">—</span>
+    </footer>
+  </div>
+
+  <!-- 安装弹窗 -->
+  <div class="modal-mask" id="modalMask" style="display:none">
+    <div class="modal" id="modalBox"></div>
+  </div>
+
+  <div id="toasts"></div>
+</div>
+
+<script src="mobile-bridge.js"></script>
+<script src="renderer.js"></script>
+<script src="android-extra.js"></script>
+
+</body>
+</html>

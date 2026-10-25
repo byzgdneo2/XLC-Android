@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 底色与桌面端深色主题一致，避免启动瞬间闪白 -->
+    <style name="Theme.XLC" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">#0f1116</item>
+        <item name="android:colorBackground">#0f1116</item>
+        <item name="android:statusBarColor">#0f1116</item>
+        <item name="android:navigationBarColor">#0f1116</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

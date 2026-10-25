@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+app/build/
+
+# Kotlin
+.kotlin/
+
+# 本机配置（Gradle 自动生成，含本机 SDK 路径）
+local.properties
+
+# 本机依赖链接（junction -> 桌面端项目）
+node_modules
+
+# 下载缓存
+dl/
+
+# 测试输出（截图可能含账号信息）
+qa/out/
+
+# IDE
+.idea/
+*.iml
+
+# 构建产物与签名密钥（密钥永远不入库）
+*.apk
+*.aab
+*.jks
+*.keystore

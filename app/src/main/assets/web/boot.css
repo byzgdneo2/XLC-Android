@@ -1,0 +1,33 @@
+/* ============================================================
+   启动遮罩首屏样式（极小体积，必须第一个加载）
+   目的：双击启动器后 100ms 内就能看到界面，不让用户对着空桌面等。
+   刻意不引用任何 CSS 变量、不依赖任何外部资源，保证解析即生效。
+   主样式表 styles.css 末尾有同名的浅色主题覆盖。
+   ============================================================ */
+html,body{ height:100%; margin:0; background:#0b0d11; }
+#bootMask{
+  position:fixed; inset:0; z-index:9999;
+  background:#0b0d11; display:flex; align-items:center; justify-content:center;
+  font-family:"Segoe UI",system-ui,-apple-system,"Microsoft YaHei",sans-serif;
+  transition:opacity .32s ease, visibility .32s;
+}
+#bootMask.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+#bootMask .boot-inner{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+#bootMask .boot-logo{
+  width:92px; height:92px;
+  filter:drop-shadow(0 0 24px rgba(16,185,129,.35));
+  animation:bootPop .5s ease-out;
+}
+@keyframes bootPop{ from{ transform:scale(.72); opacity:0; } to{ transform:scale(1); opacity:1; } }
+#bootMask .boot-name{ color:#e8ecf1; font-size:16px; font-weight:600; letter-spacing:.5px; margin-top:2px; }
+#bootMask .boot-name b{ color:#34d399; }
+#bootMask .boot-sub{ color:#5c6673; font-size:11px; letter-spacing:2px; margin-top:-11px; }
+#bootMask .boot-bar{
+  width:220px; height:4px; border-radius:99px;
+  background:rgba(255,255,255,.08); overflow:hidden; margin-top:6px;
+}
+#bootMask .boot-bar i{
+  display:block; height:100%; width:8%; border-radius:99px;
+  background:linear-gradient(135deg,#34d399,#0d9488); transition:width .35s ease;
+}
+#bootMask .boot-tip{ color:#5c6673; font-size:12px; letter-spacing:.3px; min-height:17px; }
